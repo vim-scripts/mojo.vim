@@ -1,0 +1,27 @@
+Mojo templates Syntax file
+Language: Mojo templates
+By Yaroslav Korhsak <ykorshak@gmail.com>
+
+DESCRIPTION
+
+Syntax file for highlighting embedded Perl code in Mojo templates.
+Designed to highlight syntax of both html.ep and html.epl formats.
+
+INSTALLATION
+
+Save this files into your ~/.vim/ directory.
+
+CONFIGURATION
+
+Configurations variables:
+
+    :let mojo_disable_html = 1
+
+For highlight embedded Perl code in __DATA__ sections of your Perl files,
+add following line to your .vimrc:
+
+    autocmd FileType perl syn include @perlDATA syntax/MojoliciousTemplate.vim
+
+CREDITS
+
+Viacheslav Tykhanovskyi, the greatest - co-founding and optimization

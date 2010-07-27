@@ -1,0 +1,6 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=3168
+
+Syntax file for highlighting embedded Perl code in Mojolicious (http://mojolicio.us) templates.
+Designed to highlight syntax of both html.ep and html.epl formats and (optional) __DATA__ section in Perl files.
+
+mojo.vim lives at http://github.com/yko/Vim-Mojo-Data-syntax
