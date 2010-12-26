@@ -1,70 +1,52 @@
 " html w/ Perl as a preprocessor
 " Language:    Perl + html
 " Maintainer:  yko <ykorshak@gmail.com>
-" Version:     0.0.4
-" Last Change: 2010 Jul 27
-" Location:    http://github.com/yko/Vim-Mojo-Data-syntax
+" version:     0.03
+" Last Change: 2010 Dec 26
+" Location:    http://github.com/yko/mojo.vim
 " Original version: vti <vti@cpan.org>
 
-if version < 600
-syntax clear
-elseif exists("b:current_syntax")
-finish
+if exists("perl_fold")
+   let b:bfold = perl_fold
+   unlet perl_fold
 endif
 
-if !exists("main_syntax")
-    let main_syntax = 'perlscript'
+" Clear previous syntax name
+unlet! b:current_syntax
+
+" Include Perl syntax intp @Perl cluster
+syntax include @Perl syntax/perl.vim
+
+" This groups are broken when included
+syn cluster Perl remove=perlFunctionName,perlElseIfError
+
+if exists("b:bfold")
+    perl_fold = b:bfold
+    unlet b:bfold
 endif
 
-if exists("perl_fold") 
-   let bfold = perl_fold
-    unlet perl_fold
-endif
-
-if version < 600
-  so <sfile>:p:h/html.vim
-  syn include @Perl <sfile>:p:h/perl.vim
-else
-  runtime! syntax/html.vim
-  unlet b:current_syntax
-  syn include @Perl syntax/perl.vim
-endif
-
-syn cluster htmlPreproc add=PerlInside
-
-syn match MojoStart "<%" contained 
-syn match MojoStart "<%=" contained 
-syn match MojoStart "<%==" contained 
-syn match MojoStart "<%{=" contained 
-syn match MojoStart "^%"  contained 
-syn match MojoStart "^%="  contained 
-syn match MojoStart "^%=="  contained 
-syn match MojoEnd "%>" contained 
+" Begin and end of code blocks
+syn match MojoStart /<%=\{0,2}/ contained
+syn match MojoStart /^\s*%=\{0,2}/  contained
+syn match MojoEnd /=\{0,1}%>/ contained
 
 syn cluster Mojo contains=MojoStart,MojoEnd
 
-syn region  PerlInside keepend oneline start=+<%=\?+hs=s skip=+".*%>.*"+ end=+%>+ contains=@Mojo,@Perl
-syn region  PerlInside keepend oneline start=+^%=\?+hs=s end=+$+ contains=@Mojo,@Perl
+" Highlight code blocks
+syn region PerlInside keepend oneline start=+<%=\{0,2}+hs=s skip=+".*%>.*"+ end=+=\{0,1}%>+ contains=@Mojo,@Perl
+syn region PerlInside keepend oneline start=+^\s*%=\{0,2}+hs=s end=+$+ contains=@Mojo,@Perl
 
+" Display code blocks in tag parameters' quoted value like 
+" <a href="<%= url_for 'foo' %>'>
+syn cluster htmlPreproc add=PerlInside
 
-if version >= 508 || !exists("did_epl_syn_inits")
-  if version < 508
-    let did_epl_syn_inits = 1
-    command -nargs=+ HiLink hi link <args>
-  else
-    command -nargs=+ HiLink hi def link <args>
-  endif
+command -nargs=+ HiLink hi def link <args>
 
-  HiLink MojoStart perlType
-  HiLink MojoEnd perlType
+HiLink MojoStart perlType
+HiLink MojoEnd perlType
+HiLink MojoFileName perlString
+HiLink MojoFileNameStart perlSpecial
 
-  delcommand HiLink
-endif
+delcommand HiLink
 
-
-let b:current_syntax = "epl"
-if exists("bfold") 
-    perl_fold = bfold
-    unlet bfold
-endif
-
+let b:current_syntax = "html.epl"
